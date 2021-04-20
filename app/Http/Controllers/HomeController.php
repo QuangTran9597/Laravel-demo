@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
    public function template(Request $request){
 
-        $searchText= $request->input('search');
+        $searchText= $request->input('search'); //cmt
 
         $date = Carbon::hasFormat($searchText, 'Y-m-d');
 
