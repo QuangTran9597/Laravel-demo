@@ -14,10 +14,16 @@ class Post extends Model
         'content',
         'created_at',
         'updated_at',
+        'user_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function categories()
+    {
+        return $this->BelongsToMany(Category::class);
     }
 }

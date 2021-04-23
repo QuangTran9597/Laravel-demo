@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -14,9 +16,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::query()->OrderByDesc('id')->paginate(15);
+       $posts =Post::with('categories')->paginate(15);
 
         return view('posts.index', compact('posts'));
+
     }
 
     /**
@@ -26,7 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $category = Category::with('posts')->get();
+
+        return view('posts.create', compact('category'));
     }
 
     /**
@@ -37,7 +42,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        Post::query()->create($request->only('slug', 'title', 'content'));
+        //  dd($request->toArray());
+
+        $post =Post::query()->create($request->only('slug', 'title', 'content','user_id'));
+
+        $post->categories()->sync($request->input('name'));
 
         return redirect()->route('posts.index')->with('thongbao', 'Bạn đã thêm thành công');
     }
@@ -61,9 +70,11 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        $category = Category::with('posts')->get();
+
         $post = Post::query()->findOrFail($id);
 
-        return view('posts.edit', compact('post'));
+        return view('posts.edit', compact(['post','category']));
     }
 
     /**
@@ -75,9 +86,11 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = Post::query()->findOrFail($id);
+        $post = Post::with('categories')->findOrFail($id);
 
         $post->update($request->only('title', 'content'));
+
+        $post->categories()->sync($request->input('name'));
 
         return redirect()->route('posts.index')->with('thongbao', 'Bạn đã sửa thành công');
     }
@@ -91,7 +104,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-       Post::destroy($id);
-       
+        $post = Post::findOrFail($id);
+        $post->categories()->detach();
+        $post->delete();
+
     }
 }

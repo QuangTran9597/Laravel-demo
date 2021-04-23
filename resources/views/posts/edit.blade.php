@@ -27,6 +27,14 @@
                     <textarea rows="5" class="form-control" name="content">{{ $post->content }}</textarea>
                 </div>
 
+                    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" multiple name="name">
+                            <option selected>Categories-Name</option>
+                            @foreach ($category as $cate )
+                                <option value="{{ $cate->id }}"> {{ $cate->name }} </option>
+                            @endforeach
+
+                        </select>
+
                 <div class="form-group">
                     <p><span class="require">*</span> - required fields</p>
                 </div>

@@ -8,6 +8,8 @@
         <th scope="col">ID</th>
         <th scope="col">Title</th>
         <th scope="col">Content</th>
+        <th scope="col">Category-Name</th>
+        <th scope="col"></th>
         <th scope="col">Action</th>
         </tr>
     </thead>
@@ -17,6 +19,11 @@
             <th scope="row">{{ $post->id }}</th>
             <td>{{ $post->title }}</td>
             <td>{{ $post->content }}</td>
+
+            @foreach ($post->categories as $cate )
+                <td>{{ $cate->name }}</td>
+            @endforeach
+
             <td>
                 <a class="btn btn-warning" href="{{ route('posts.edit', $post->id) }}">Edit</a>
                 <hr>

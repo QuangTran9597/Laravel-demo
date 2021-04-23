@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
-class TestController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke($id){
-        echo "This is my profile" . "My id" .$id;
-    }
     public function index()
     {
-        //
+        $posts = Post::query()->OrderByDesc('id')->paginate(15);
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -26,7 +26,7 @@ class TestController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -37,7 +37,9 @@ class TestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Post::query()->create($request->only('slug', 'title', 'content'));
+
+        return redirect()->route('posts.index')->with('thongbao', 'Bạn đã thêm thành công');
     }
 
     /**
@@ -59,7 +61,9 @@ class TestController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::query()->findOrFail($id);
+
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -71,8 +75,13 @@ class TestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::query()->findOrFail($id);
+
+        $post->update($request->only('title', 'content'));
+
+        return redirect()->route('posts.index')->with('thongbao', 'Bạn đã sửa thành công');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -82,6 +91,7 @@ class TestController extends Controller
      */
     public function destroy($id)
     {
-        //
+       Post::destroy($id);
+
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use App\Http\Controllers\PostController;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,9 +115,63 @@ Route::get('phone1', function()
 
 Route::get('baipost', function()
 {
-    $user = User::with('posts')->findOrFail(2);
+    $user = User::with('posts')->findOrFail(3);
 
     $post = Post::with('user')->findOrFail(3);
+
+    dd($user->toArray());
+});
+
+Route::get('create_post', function()
+{
+    $user = User::with('posts')->findOrFail(3);
+
+    $user->posts()->createMany([
+       [ 'slug' => ' slug1',
+        'title' => 'title1',
+        'content' => 'vuamoithem'
+    ],
+        [ 'slug' => ' slug2',
+        'title' => 'title2',
+        'content' => 'vuamoithem'
+    ],
+        [ 'slug' => ' slug3',
+        'title' => 'title3',
+        'content' => 'vuamoithem'
+    ],
+    ]);
+    dd($user->toArray());
+});
+
+Route::get('update_post', function()
+{
+    $user = User::with('posts')->findOrFail(3);
+
+    // tìm bài viết có title = title2 và user_id = 3
+    $user->posts()->where('title', 'title2')->update(['content'=>'vuamoisua']);
+    dd($user->toArray());
+});
+
+Route::get('tomany', function()
+{
+    $post = Post::with('categories')->findOrFail(5);
+
+    $category = Category::with('posts')->findOrFail(1);
+
+    dd($post->toArray());
+});
+
+Route::get('create_many', function()
+{
+    $post = Post::with('categories')->findOrFail(5);
+
+    // $post->categories()->attach(1);
+    // $post->categories()->detach([2,3]); //xoa
+
+    // $post->categories()->toggle([2,3]);
+
+    $post->categories()->sync([1, 2, 3]);
+
 
     dd($post->toArray());
 });

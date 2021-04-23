@@ -26,19 +26,12 @@
                         <textarea rows="5" class="form-control" name="content"></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label for="title">User_id <span class="require">*</span></label>
-                        <input type="text" class="form-control" name="user_id">
-                    </div>
-
-
-                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" multiple name='name'>
-                            <option selected>Categories-Name</option>
-                            @foreach ($category as $cate )
-                                <option value="{{ $cate->id }}"> {{ $cate->name }} </option>
-                            @endforeach
-                        </select>
-
+                    <select class="form-select" multiple aria-label="multiple select example">
+                        <option selected>Category</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
 
                     <div class="form-group">
                         <p><span class="require">*</span> - required fields</p>
