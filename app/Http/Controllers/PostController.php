@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Rules\CheckRule;
 
 class PostController extends Controller
 {
@@ -16,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts =Post::with('categories')->paginate(15);
+       $posts =Post::with('categories')->orderByDesc('id')->paginate(15);
 
         return view('posts.index', compact('posts'));
 
@@ -29,7 +31,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $category = Category::with('posts')->get();
+        $category = Category::all();
 
         return view('posts.create', compact('category'));
     }
@@ -40,9 +42,9 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //  dd($request->toArray());
+        // dd($request->toArray());
 
         $post =Post::query()->create($request->only('slug', 'title', 'content','user_id'));
 
@@ -70,9 +72,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::with('posts')->get();
+        $category = Category::all();
 
-        $post = Post::query()->findOrFail($id);
+        $post = Post::with('categories')->findOrFail($id);
 
         return view('posts.edit', compact(['post','category']));
     }
@@ -84,7 +86,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
         $post = Post::with('categories')->findOrFail($id);
 

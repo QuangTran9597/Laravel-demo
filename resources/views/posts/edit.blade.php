@@ -27,13 +27,30 @@
                     <textarea rows="5" class="form-control" name="content">{{ $post->content }}</textarea>
                 </div>
 
+                <div class="form-group">
+                    <label for="categories">Choose Categories</label> <br>
+
+                    <select  id="categories" multiple name="name[]">
+
+                         @foreach ($category as $cate )
+                                <option value="{{ $cate->id }}"
+                                {{ $post->categories->contains($cate->id) ? 'selected' : ''}} >
+                                 {{ $cate->name }} </option>
+                            @endforeach
+                    </select>
+
+                    <!-- <label for="categories">Categories-Name</label>
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" multiple name="name">
-                            <option selected>Categories-Name</option>
+
                             @foreach ($category as $cate )
-                                <option value="{{ $cate->id }}"> {{ $cate->name }} </option>
+                                <option value="{{ $cate->id }}"
+                                 {{ $post->categories->contains($cate->id) }} ? 'selected' : ''>
+                                 {{ $cate->name }} </option>
                             @endforeach
 
-                        </select>
+                    </select> -->
+
+                </div>
 
                 <div class="form-group">
                     <p><span class="require">*</span> - required fields</p>
